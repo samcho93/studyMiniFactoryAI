@@ -252,7 +252,7 @@
           { type: 'figure', html: LAB_VIEW },
           { type: 'figure', html: LAB_DETAIL },
           { type: 'figure', html: LAB_COUNT },
-          { type: 'callout', kind: 'more', title: '📘 더 알아보기 — 3D 가 느릴 때', html: '내장 그래픽 노트북에서 설비 4대를 볼 때 화면이 끊기면 주소 끝에 <code>?quality=low</code> 를 붙여 저품질 모드로 엽니다(예: <code>/line?quality=low</code>). WebGL 을 쓸 수 없는 PC 에서는 3D 대신 상태 수치 표가 나옵니다.' },
+          { type: 'callout', kind: 'more', title: '3D 가 느릴 때', html: '내장 그래픽 노트북에서 설비 4대를 볼 때 화면이 끊기면 주소 끝에 <code>?quality=low</code> 를 붙여 저품질 모드로 엽니다(예: <code>/line?quality=low</code>). WebGL 을 쓸 수 없는 PC 에서는 3D 대신 상태 수치 표가 나옵니다.' },
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 준비</b>: 설비 4대 · 모두 준비 상태로 시작합니다. 델타 · 카메라 A 를 보여 주려면 수업 직전에 설비 #1 을 <b>기동</b> 해 두면 좋습니다(수업 끝에 정지).</li><li><b>공용 서버 주의</b>: 실습 5-3(설비 대수)은 서버 전체 설정입니다. 강의실 서버 하나를 같이 쓰면 강사 시연으로만 하고, 끝나면 반드시 4대로 되돌립니다. 학생이 각자 run.bat 을 실행했다면 각자 해도 됩니다.</li><li><b>자주 막히는 곳</b>: 3D 장비 클릭이 안 됨 → 확대 후 몸체 가운데 클릭 / 화면이 끊김 → <code>?quality=low</code> / "데이터 없음" → 서버가 아직 준비 중.</li><li><b>확인 기준</b>: 공정 순서 7단계를 장비 이름으로 말하기, 카메라 A/B 용도 구분, 설비 대수 원복 확인.</li><li><b>발문</b>: "3D 에서 로봇을 끌어 움직일 수 있으면 편할 텐데 왜 막았을까?" → 안전(불변 원칙: 웹은 시각화 · 상위 명령만).</li></ul>' },
         ],
         practice: [],

@@ -211,6 +211,112 @@
       explain: '검사 계획은 적재함 단위 품질 기준입니다. 진동은 예지보전에서 다룹니다.' },
   ];
 
+  // ---------------------------------------------------------------- MES 개념(무엇 · 왜 · MESA-11 · ERP 와 비교 · 연동)
+  const MESC_ARR = (id) => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fill-arrow"/></marker></defs>`;
+  const MESC_FIG_GAP = `<svg viewBox="0 0 720 230" role="img" aria-label="ERP 는 하루 단위로 계획하고 설비는 밀리초 단위로 움직인다. MES 는 그 사이에서 계획을 작업지시로 바꾸고 현장 결과를 실시간으로 기록한다">
+  ${MESC_ARR('c09x1')}
+  <rect x="20" y="20" width="200" height="60" rx="12" class="p2"/><text x="120" y="46" text-anchor="middle" class="tx-w">ERP (L4)</text><text x="120" y="66" text-anchor="middle" class="tx-w">"오늘 레드 20박스"</text>
+  <rect x="260" y="20" width="200" height="190" rx="14" class="p3s"/><text x="360" y="46" text-anchor="middle" class="tx-b">MES (L3)</text>
+  <text x="360" y="72" text-anchor="middle" class="tx-m">작업지시로 쪼개기</text>
+  <text x="360" y="94" text-anchor="middle" class="tx-m">설비 · 순서 정하기</text>
+  <text x="360" y="116" text-anchor="middle" class="tx-m">공정 진행 · 실적 기록</text>
+  <text x="360" y="138" text-anchor="middle" class="tx-m">품질 검사 · LOT 기록</text>
+  <text x="360" y="160" text-anchor="middle" class="tx-m">설비 상태 · 알람 · 정비</text>
+  <text x="360" y="190" text-anchor="middle" class="tx-b">시간 · 분 단위 · 실시간</text>
+  <rect x="500" y="20" width="200" height="60" rx="12" class="p5s"/><text x="600" y="46" text-anchor="middle" class="tx-b">설비 · PLC (L2~L0)</text><text x="600" y="66" text-anchor="middle" class="tx-m">초 · 밀리초</text>
+  <line x1="222" y1="42" x2="256" y2="42" class="ln" stroke-width="2" marker-end="url(#c09x1)"/>
+  <line x1="462" y1="42" x2="496" y2="42" class="ln" stroke-width="2" marker-end="url(#c09x1)"/>
+  <line x1="496" y1="66" x2="462" y2="66" class="ln" stroke-width="2" marker-end="url(#c09x1)"/>
+  <line x1="256" y1="66" x2="222" y2="66" class="ln" stroke-width="2" marker-end="url(#c09x1)"/>
+  <text x="120" y="110" text-anchor="middle" class="tx-m">계획 · 오더 내려보냄 →</text>
+  <text x="120" y="130" text-anchor="middle" class="tx-m">← 실적 · 재고 반영 받음</text>
+  <text x="600" y="110" text-anchor="middle" class="tx-m">← 상태 · 카운터 · 센서</text>
+  <text x="600" y="130" text-anchor="middle" class="tx-m">작업 시작 · 정지 →</text>
+  <text x="360" y="225" text-anchor="middle" class="tx-m">MES 는 "계획(ERP)과 기계(PLC) 사이의 빈칸" 을 메웁니다</text>
+</svg>`;
+  const MESC_FIG_LINK = `<svg viewBox="0 0 720 220" role="img" aria-label="ERP 와 MES 사이에 오가는 정보: 아래로 생산오더와 라우팅, 위로 실적 확인과 자재 출고, 완제품 입고, 검사 결과">
+  ${MESC_ARR('c09x2')}
+  <rect x="20" y="20" width="230" height="180" rx="14" class="p2s"/><text x="135" y="48" text-anchor="middle" class="tx-b">ERP</text>
+  <text x="135" y="78" text-anchor="middle" class="tx-m">수주 · 생산계획서</text><text x="135" y="100" text-anchor="middle" class="tx-m">생산오더(PRO) · 자재 예약</text>
+  <text x="135" y="122" text-anchor="middle" class="tx-m">재고 · 출고</text><text x="135" y="144" text-anchor="middle" class="tx-m">기술적 완료(TECO)</text>
+  <rect x="470" y="20" width="230" height="180" rx="14" class="p3s"/><text x="585" y="48" text-anchor="middle" class="tx-b">MES</text>
+  <text x="585" y="78" text-anchor="middle" class="tx-m">작업지시(설비 · 순서)</text><text x="585" y="100" text-anchor="middle" class="tx-m">공정 5단계 진행</text>
+  <text x="585" y="122" text-anchor="middle" class="tx-m">검사 LOT · LOT 계보</text><text x="585" y="144" text-anchor="middle" class="tx-m">설비 상태 · 정비</text>
+  <line x1="254" y1="80" x2="466" y2="80" class="ln" stroke-width="2.4" marker-end="url(#c09x2)"/>
+  <text x="360" y="70" text-anchor="middle" class="tx-b">① 다운로드: 생산오더 · 라우팅 · 자재</text>
+  <line x1="466" y1="150" x2="254" y2="150" class="ln" stroke-width="2.4" marker-end="url(#c09x2)"/>
+  <text x="360" y="140" text-anchor="middle" class="tx-b">② 실적 확인: 수량 · GI · GR · 검사 결과</text>
+  <text x="360" y="176" text-anchor="middle" class="tx-m">적재함이 출고될 때마다 자동으로 올라감</text>
+</svg>`;
+  const MESC_CONTENT = [
+    { type: 'h', text: 'MES 란 무엇인가 — 공장 현장의 실시간 관리 시스템' },
+    { type: 'p', html: '<b>MES(Manufacturing Execution System, 제조 실행 시스템)</b> 는 ERP 가 세운 계획을 <b>현장에서 실제로 실행하고, 그 결과를 실시간으로 기록 · 관리</b>하는 시스템입니다. ERP 가 "오늘 레드 20박스" 라고 정하면, MES 는 그것을 <b>어느 설비에서 어떤 순서로</b> 만들지 작업지시로 나누고, 공정이 얼마나 진행됐는지, 몇 개가 양품 · 불량인지, 어떤 LOT 이 언제 어느 설비에서 만들어졌는지, 설비가 멈췄는지를 분 단위로 기록합니다.' },
+    { type: 'figure', html: MESC_FIG_GAP, caption: 'ERP(하루 단위 계획)와 설비(밀리초 단위 동작) 사이를 MES 가 잇습니다' },
+    { type: 'table', head: ['MES 가 없으면', 'MES 가 있으면'], rows: [
+      ['종이 작업지시서를 현장에 나눠 줌', '설비별 작업지시가 화면으로 내려가고 순서를 바로 바꿀 수 있음'],
+      ['생산량을 교대가 끝날 때 손으로 적어 보고', '적재함이 출고될 때마다 실적이 자동으로 기록 · ERP 에 반영'],
+      ['불량이 나면 어느 설비 · 언제 것인지 모름', 'LOT 추적으로 공작물 → 박스 → 적재함 → 출고를 거슬러 찾음'],
+      ['설비가 멈춘 이유와 시간을 기억에 의존', '설비 상태 · 알람 · 정비 기록이 남아 OEE 로 손실을 분석'],
+    ] },
+    { type: 'h', text: 'MES 의 11가지 기능(MESA-11)과 이 플랫폼' },
+    { type: 'p', html: 'MES 관련 단체인 MESA International 은 MES 가 하는 일을 11가지 기능으로 정리했습니다(MESA-11 모델). 이 플랫폼의 MES 가 각 기능을 어디서 하는지 확인해 보세요.' },
+    { type: 'table', head: ['MESA-11 기능', '하는 일', '이 플랫폼에서'], rows: [
+      ['① 자원 할당 · 상태 관리', '설비 · 도구의 상태와 사용 가능 여부', '<span class="ui">⚙ 설비 · 알람</span>, 공장 라인의 설비 상태'],
+      ['② 작업 일정 수립', '작업의 순서 · 시작 시각 계획', '<span class="ui">▦ 디스패치 보드</span>(설비별 대기열 · 계획 시작/끝)'],
+      ['③ 디스패칭(생산 단위 지시)', '지금 이 설비에 무엇을 시작할지 지시', '작업지시 시작 → 설비 자동 기동(계획 따라 운전)'],
+      ['④ 문서 관리', '작업 표준 · 공정 순서 · 검사 기준', '<span class="ui">⇩ 기준정보 · 가져오기</span>(라우팅 · 검사 계획 · 근무 달력)'],
+      ['⑤ 데이터 수집', '현장 데이터를 자동 · 수동으로 모음', '적재함 출고마다 자동 실적, <span class="ui">실적 등록</span>, 센서 데이터'],
+      ['⑥ 인력 관리', '작업자 · 근태 · 자격', '없음(명령 · 등록에 사용자 이름만 기록)'],
+      ['⑦ 품질 관리', '검사 · 판정 · 불량 기록', '검사 LOT(적재함마다), <span class="ui">◎ 품질</span>'],
+      ['⑧ 공정 관리', '공정 진행 감시 · 조정', '<span class="ui">⚑ 생산오더 · 공정</span>의 공정 5단계'],
+      ['⑨ 정비 관리', '고장 · 예방 · 예지 정비', '<span class="ui">🔧 정비 · 예지보전</span>, 정비 오더'],
+      ['⑩ 제품 추적 · 계보', '무엇이 어디서 언제 무엇으로 만들어졌나', '<span class="ui">⛓ LOT 추적</span>(공작물 → 박스 → 적재함 → 출고)'],
+      ['⑪ 성과 분석', '실적 · 가동률 · 품질 지표', 'OEE · 대시보드 · 설비 가동 간트'],
+    ], caption: '11가지 중 10가지를 이 플랫폼에서 실습할 수 있습니다(⑥ 인력 관리는 교육용 범위 밖)' },
+    { type: 'h', text: 'ERP 와 MES 는 무엇이 다를까' },
+    { type: 'table', head: ['구분', 'ERP', 'MES'], rows: [
+      ['계층(ISA-95)', '레벨 4 — 경영 · 계획', '레벨 3 — 생산 실행'],
+      ['시간 단위', '일 · 주 · 월', '시간 · 분 · 실시간'],
+      ['핵심 질문', '무엇을 · 얼마나 · 언제까지 만들까', '지금 어느 설비에서 무엇을, 잘 만들고 있나'],
+      ['주요 데이터', '수주 · 계획 · 자재 · 재고 · 금액', '작업지시 · 공정 · 실적 · 불량 · LOT · 설비 상태'],
+      ['주 사용자', '영업 · 생산계획 · 구매 · 관리자', '현장 관리자 · 작업자 · 품질 · 보전'],
+      ['이 플랫폼 화면', '위 메뉴 <span class="ui">ERP</span>', '위 메뉴 <span class="ui">MES</span>'],
+    ] },
+    { type: 'h', text: 'ERP 와 MES 는 무엇을 주고받을까' },
+    { type: 'figure', html: MESC_FIG_LINK, caption: '① ERP → MES: 생산오더 다운로드 / ② MES → ERP: 실적 확인(자재 출고 GI · 완제품 입고 GR · 검사 결과)' },
+    { type: 'p', html: '두 시스템은 따로 일하지만 <b>정해진 문서로 연결</b>됩니다. ERP 의 생산오더가 MES 로 내려오면(다운로드) MES 는 라우팅에 따라 작업지시와 공정을 만듭니다. 생산이 진행되면 MES 는 적재함마다 실적을 ERP 로 올리고(실적 확인), ERP 는 그 실적으로 자재를 출고(GI)하고 완제품을 입고(GR)하며 재고 · 수주 잔량 · 출고를 갱신합니다. 이 연결은 <span class="ui">⇄ ERP↔MES 연동</span> 화면에서 그래프로 볼 수 있습니다.' },
+    { type: 'callout', kind: 'more', title: '표준과 실제 현장', html: '<ul><li><b>ISA-95(IEC 62264)</b> 는 기업 시스템(ERP)과 제조 시스템(MES) 사이의 계층과 주고받는 정보를 정한 국제 표준입니다. 이 플랫폼의 생산오더 다운로드 · 실적 확인도 이 생각을 따릅니다.</li><li>실제 공장의 MES 는 업종마다 다릅니다 — 반도체 · 디스플레이처럼 공정이 수백 개인 곳, 식품 · 제약처럼 추적성과 기록이 중요한 곳, 조립처럼 작업자 지시가 중요한 곳마다 강조하는 기능이 다릅니다.</li><li>스마트공장은 MES 데이터에 AI 를 붙여 품질 예측 · 예지보전 · 일정 최적화로 나아갑니다 — 이 강좌의 11~13차시가 그 단계입니다.</li></ul>' },
+  ];
+  const MESC_SLIDES = [
+    { layout: 'diagram', title: 'MES 란 — 계획과 기계 사이의 빈칸', html: MESC_FIG_GAP,
+      notes: '<p>💬 "ERP 가 \'오늘 레드 20박스\' 라고 정했습니다. 그다음 현장에서는 누가 무엇을 해야 할까요?" — 설비 · 순서 정하기, 진행 확인, 기록, 불량 처리 … 이것이 MES 의 일입니다.</p>' },
+    { layout: 'table', title: 'MESA-11 — MES 의 11가지 기능', head: ['기능', '이 플랫폼'], rows: [
+      ['자원 · 상태 / 일정 / 디스패칭', '설비 · 알람 / 디스패치 보드 / 작업지시 시작'], ['문서 / 데이터 수집', 'MES 기준정보 / 자동 실적 · 센서'], ['인력', '없음(교육용 범위 밖)'],
+      ['품질 / 공정', '검사 LOT · 품질 / 공정 5단계'], ['정비 / 추적', '정비 · 예지보전 / LOT 추적'], ['성과 분석', 'OEE · 대시보드 · 간트']],
+      notes: '<p>MES 화면 왼쪽 메뉴를 띄워 놓고 기능과 메뉴를 하나씩 연결합니다. 11개를 외우게 하기보다 "MES 는 실행 · 기록 · 품질 · 설비 · 추적 · 분석을 한다" 로 묶어 기억하게 합니다.</p>' },
+    { layout: 'table', title: 'ERP vs MES', head: ['구분', 'ERP', 'MES'], rows: [
+      ['계층', 'L4 계획', 'L3 실행'], ['시간', '일 · 주 · 월', '분 · 실시간'], ['질문', '무엇을 얼마나 언제', '지금 어디서 무엇을, 잘 되나'], ['데이터', '수주 · 자재 · 재고', '작업지시 · 실적 · 불량 · LOT']],
+      notes: '<p>💬 "불량률을 실시간으로 보고 싶다면 ERP 와 MES 중 어디서?" → MES. "다음 달 자재를 얼마나 살지는?" → ERP.</p>' },
+    { layout: 'diagram', title: 'ERP ↔ MES 가 주고받는 것', html: MESC_FIG_LINK,
+      notes: '<p>① 다운로드(생산오더 → 작업지시 · 공정), ② 실적 확인(수량 · GI · GR · 검사). 적재함이 출고될 때마다 ②가 자동으로 일어납니다. 실습 9-1 에서 이 흔적을 직접 봅니다.</p>' },
+  ];
+  const MESC_QUIZ = [
+    { q: 'MES 의 역할로 가장 알맞은 것은?',
+      options: ['회사의 회계 결산을 한다', 'ERP 의 계획을 현장에서 실행하고 결과를 실시간으로 기록 · 관리한다', '센서 신호로 모터를 직접 돌린다', '고객과 견적을 협상한다'], answer: 1,
+      explain: 'MES 는 ISA-95 레벨 3 에서 작업지시 · 공정 · 실적 · 품질 · 추적 · 설비 상태를 실시간으로 관리합니다.' },
+    { q: '이 플랫폼에서 MESA-11 의 "제품 추적 · 계보" 기능에 해당하는 화면은?',
+      options: ['ERP → 자재(MRP) · 구매', 'MES → LOT 추적', 'AI 생산계획', '가상 고장'], answer: 1,
+      explain: 'LOT 추적은 공작물 → 박스 → 적재함 → 출고의 계보를 거슬러 찾는 기능입니다.' },
+  ];
+  const MESC_DATA = [
+    { type: 'h', text: '현장 데이터는 어떻게 모일까' },
+    { type: 'table', head: ['방법', '설명', '이 플랫폼'], rows: [
+      ['자동 수집', 'PLC · 센서 · 카메라 신호를 시스템이 직접 받아 기록', '적재함 출고 이벤트 → 실적 자동 기록, 라인 상태 · 카운터 · 센서값'],
+      ['수동 입력', '작업자가 화면에 직접 입력', '<span class="ui">실적 등록</span>(진행 중 작업지시에만), <span class="ui">◎ 품질</span> 기록'],
+      ['실적 확인 vs 백플러시', '생산 실적이 나올 때 자재 사용을 어떻게 처리할지', '생산오더가 있는 작업은 실적 확인(GI · GR), 없는 작업은 백플러시(소요량만큼 자동 차감)'],
+    ] },
+    { type: 'p', html: '자동 수집은 빠르고 정확하지만 센서 · 통신이 있어야 하고, 수동 입력은 유연하지만 늦고 틀릴 수 있습니다. 좋은 MES 는 <b>가능한 것은 자동으로, 판단이 필요한 것은 사람이</b> 입력하도록 나눕니다.' },
+  ];
   PY_COURSE.addChapter({
     id: 'ch09', no: '09', title: 'MES ① 생산 실행', subtitle: 'Production Orders · Dispatch · Work Orders · Results',
     summary: 'ERP 에서 내려온 생산오더를 MES 에서 공정 · 작업지시로 읽고, 디스패치 보드로 설비 · 순서를 바꾸며, 작업지시 · 실적 · MES 기준정보를 직접 다룹니다.',
@@ -222,9 +328,10 @@
       {
         id: 'ch09-1', title: '생산오더 · 공정 · 디스패치', minutes: 50,
         goals: ['생산오더를 펼쳐 작업지시 · 공정 · 검사 LOT 을 읽는다', '디스패치 보드에서 순서와 설비를 바꾼다', '배정 파일을 저장 · 불러온다'],
-        flow: [['도입 — ERP 와 MES 의 역할', 6], ['개념 — 공정 5단계', 6], ['실습 9-1 생산오더', 12], ['실습 9-2 디스패치', 12], ['실습 9-3 배정 파일', 6], ['정리 · 퀴즈', 8]],
+        flow: [['도입 — ERP 와 MES 의 역할', 4], ['개념 — MES 란 · MESA-11 · ERP 와 비교', 12], ['개념 — 공정 5단계', 4], ['실습 9-1 생산오더', 10], ['실습 9-2 디스패치', 10], ['실습 9-3 배정 파일', 5], ['정리 · 퀴즈', 5]],
         content: [
           { type: 'p', html: 'ERP 가 "무엇을 얼마나 언제까지" 만들지 정하면, <mark>MES(Manufacturing Execution System, 생산 실행 시스템)</mark> 는 "어느 설비가 어떤 순서로 어떻게" 만들지 실행하고 기록합니다. 이 차시에서는 ERP 에서 내려온 생산오더가 MES 에서 어떻게 펼쳐지고, 현장에서 순서를 어떻게 조정하는지 다룹니다.' },
+          ...MESC_CONTENT,
           { type: 'figure', html: FIG_L4L3, caption: 'ERP(계획) → MES(실행) → 설비. 실적은 거꾸로 올라가 ERP 에서 확인됩니다' },
           { type: 'h', text: '라우팅 — 박스가 만들어지는 다섯 공정' },
           { type: 'figure', html: FIG_OPS, caption: '라우팅 RT-BOX4: 생산오더를 받으면 작업지시마다 이 다섯 공정이 만들어집니다' },
@@ -238,13 +345,14 @@
           { type: 'figure', html: LAB_PRO },
           { type: 'figure', html: LAB_DISPATCH },
           { type: 'figure', html: LAB_FILE },
-          { type: 'callout', kind: 'more', title: '📘 더 알아보기 — 디스패칭', html: '실제 공장의 MES 에서 <b>디스패칭(dispatching)</b> 은 "지금 이 설비에 다음으로 무엇을 넣을지" 를 정하는 일입니다. 계획(ERP)은 하루 · 주 단위로 세우지만, 현장은 설비 고장 · 급한 주문 · 자재 도착 같은 사정으로 분 단위로 바뀌기 때문에 MES 에서 다시 조정합니다. 13차시의 AI 생산계획은 이 배정 초안을 대화로 만들어 줍니다.' },
+          { type: 'callout', kind: 'more', title: '디스패칭', html: '실제 공장의 MES 에서 <b>디스패칭(dispatching)</b> 은 "지금 이 설비에 다음으로 무엇을 넣을지" 를 정하는 일입니다. 계획(ERP)은 하루 · 주 단위로 세우지만, 현장은 설비 고장 · 급한 주문 · 자재 도착 같은 사정으로 분 단위로 바뀌기 때문에 MES 에서 다시 조정합니다. 13차시의 AI 생산계획은 이 배정 초안을 대화로 만들어 줍니다.' },
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 준비</b>: 실습 9-2 에는 <b>대기 작업지시가 2건 이상</b> 필요합니다. 수업 직전에 ERP 에서 색 3~4 가지 · 설비 2대로 계획서를 만들어 생산 시작하면(7차시) 설비마다 대기열이 생깁니다. 모든 작업지시가 끝나 있으면 카드를 옮길 수 없습니다.</li><li><b>공용 서버 주의</b>: 디스패치 변경은 모든 학생 화면과 설비에 즉시 반영됩니다. 교사가 시연하고, 학생은 모둠 대표만 한 번씩 옮기게 합니다.</li><li><b>자주 막히는 곳</b>: 카드가 안 끌림 → 진행(▶) 카드이거나, 브라우저 창이 너무 좁은 경우. 창을 넓히고 대기 카드를 끌게 합니다.</li><li><b>발문</b>: "계획서 배정과 디스패치 보드가 다르면 무엇이 맞나?" → 지금 현장은 디스패치 보드.</li><li><b>확인 기준</b>: 공정 5단계를 순서대로 말하기, 디스패치에서 순서를 바꾼 전/후 캡처.</li></ul>' },
         ],
         practice: [],
-        quiz: QUIZ1,
+        quiz: QUIZ1.concat(MESC_QUIZ),
         slides: [
           { layout: 'title', title: '생산오더 · 공정 · 디스패치', subtitle: 'ERP 가 정하고, MES 가 실행한다', notes: '<p>💬 "계획대로만 공장이 돌아갈까요?" — 고장 · 급주문 같은 예를 끌어내 디스패치의 필요성으로 연결합니다.</p>' },
+          ...MESC_SLIDES,
           { layout: 'diagram', title: 'ERP → MES → 설비', html: FIG_L4L3, notes: '<p>위로 올라가는 실적 확인(자재 출고 · 완제품 입고)은 8차시 재고 이력과 연결됩니다.</p>' },
           { layout: 'diagram', title: '공정 5단계(라우팅)', html: FIG_OPS, notes: '<p>각 공정이 3D 라인의 어느 장비인지 짚습니다: 컨베이어 · 카메라 A · 델타 · UR3 · 적재함.</p>' },
           { layout: 'diagram', title: '화면 — 생산오더 펼치기', html: SHOT('mes_pro_open', '펼친 생산오더'), notes: '<p>제목 줄의 ▼ 를 누르는 시연. 작업지시 · 공정 칸 · 자재 소요 · 검사 LOT 건수를 차례로 가리킵니다.</p>' },
@@ -261,10 +369,11 @@
       {
         id: 'ch09-2', title: '작업지시와 생산 실적', minutes: 50,
         goals: ['작업지시 상태와 버튼의 의미를 설명한다', '계획 따라 운전을 관찰한다', '생산 실적 · ERP 반영 · 수동 실적 등록을 이해한다', 'MES 기준정보를 예시 파일로 가져온다'],
-        flow: [['도입 — 설비는 언제 움직이나', 5], ['개념 — 작업지시 상태', 5], ['실습 9-4 작업지시', 12], ['실습 9-5 실적', 10], ['실습 9-6 기준정보', 8], ['정리 · 퀴즈', 10]],
+        flow: [['도입 — 설비는 언제 움직이나', 4], ['개념 — 작업지시 상태 · 현장 데이터 수집', 7], ['실습 9-4 작업지시', 11], ['실습 9-5 실적', 10], ['실습 9-6 기준정보', 8], ['정리 · 퀴즈', 10]],
         content: [
           { type: 'p', html: '4차시에서 "처음 켜면 설비가 움직이지 않는 것이 정상" 이라고 했습니다. 그렇다면 설비는 언제 움직일까요? 답은 <b>작업지시</b>입니다. 이 플랫폼의 설비는 MES 작업지시를 따라 기동하고 멈춥니다. 이 교시에서는 작업지시의 상태, 생산 실적, MES 기준정보를 다룹니다.' },
           { type: 'figure', html: FIG_WO, caption: '작업지시 상태 — 대기 → 진행 → 완료, 필요하면 중단' },
+          ...MESC_DATA,
           { type: 'table', head: ['상황', '설비', '작업지시'], rows: [
             ['생산 시작 직후', '대기열 맨 위 작업지시의 설비가 기동', '○ 대기 → 진행'],
             ['적재함 출고', '계속 운전', '양품 +5, 실적 1건'],

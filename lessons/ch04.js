@@ -262,7 +262,7 @@
           { type: 'figure', html: LAB_FIRST },
           { type: 'figure', html: LAB_AGAIN },
           { type: 'figure', html: LAB_DEMO },
-          { type: 'callout', kind: 'more', title: '📘 더 알아보기 — 자주 겪는 문제', html: '<ul><li><b>브라우저가 열리지 않음</b>: 검은 창의 [5/5] 주소를 직접 입력합니다. 서버 준비에 최대 3분까지 기다립니다.</li><li><b>내려받기 실패</b>: 학교 방화벽 · 프록시 때문일 수 있습니다. 강사가 <code>.runtime</code> 이 포함된 폴더를 배포하면 인터넷 없이도 실행됩니다.</li><li><b>3D 가 느림</b>: 탭을 여러 개 열지 말고, 공장 라인 3D 위 시점 바의 <span class="ui">저품질 모드</span> 를 씁니다.</li><li><b>화면이 깨짐 · 예전 화면</b>: <code>run.bat -Rebuild</code>.</li></ul>' },
+          { type: 'callout', kind: 'more', title: '자주 겪는 문제', html: '<ul><li><b>브라우저가 열리지 않음</b>: 검은 창의 [5/5] 주소를 직접 입력합니다. 서버 준비에 최대 3분까지 기다립니다.</li><li><b>내려받기 실패</b>: 학교 방화벽 · 프록시 때문일 수 있습니다. 강사가 <code>.runtime</code> 이 포함된 폴더를 배포하면 인터넷 없이도 실행됩니다.</li><li><b>3D 가 느림</b>: 탭을 여러 개 열지 말고, 공장 라인 3D 위 시점 바의 <span class="ui">저품질 모드</span> 를 씁니다.</li><li><b>화면이 깨짐 · 예전 화면</b>: <code>run.bat -Rebuild</code>.</li></ul>' },
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 전 준비</b>: 강의실 PC 에 미리 한 번 실행해 <code>.runtime</code> · 패키지 설치를 끝내 두면 수업 시간이 크게 줄어듭니다(처음 실행이 가장 오래 걸립니다). 실행이 끝난 폴더를 복사해 배포해도 됩니다.</li><li><b>공용 서버 방식</b>: PC 사양이 낮으면 교사 PC 에서 <code>run.bat -Lan</code> 으로 띄우고 학생은 브라우저로 접속합니다. 이때 명령 · 고장 실습이 서로 영향을 주므로 모둠별 설비 번호를 정해 줍니다.</li><li><b>초기화 전략</b>: 차시마다 깨끗한 상태가 필요하면 <code>data</code> 폴더를 차시 이름으로 백업해 두고 바꿔 끼웁니다.</li><li><b>자주 막히는 단계</b>: 한글 경로 · OneDrive 폴더 안에 두어 실패하는 경우가 많습니다 → <code>D:\\minifactory</code> 처럼 짧은 경로.</li><li><b>확인 기준</b>: 각자 /site 화면을 띄우고, data 폴더 초기화 방법을 말할 수 있다.</li></ul>' },
         ],
         practice: [],

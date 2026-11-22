@@ -176,6 +176,109 @@
       explain: 'AI 의 답은 항상 원래 화면의 데이터로 검증합니다.' },
   ];
 
+  // ---------------------------------------------------------------- ERP 개념(무엇 · 왜 · 발전 · 모듈 · 위치)
+  const ERPC_ARR = (id) => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fill-arrow"/></marker></defs>`;
+  const ERPC_FIG_SILO = `<svg viewBox="0 0 720 280" role="img" aria-label="ERP 이전에는 부서마다 따로 장부를 써서 숫자가 맞지 않고, ERP 는 하나의 데이터베이스를 모든 부서가 함께 쓴다">
+  <text x="170" y="26" text-anchor="middle" class="tx-b">ERP 이전 — 부서마다 따로</text>
+  <rect x="20" y="44" width="135" height="46" rx="9" class="p2s"/><text x="87" y="72" text-anchor="middle" class="tx">영업 엑셀</text>
+  <rect x="185" y="44" width="135" height="46" rx="9" class="p3s"/><text x="252" y="72" text-anchor="middle" class="tx">생산 계획표</text>
+  <rect x="20" y="110" width="135" height="46" rx="9" class="p4s"/><text x="87" y="138" text-anchor="middle" class="tx">구매 장부</text>
+  <rect x="185" y="110" width="135" height="46" rx="9" class="p5s"/><text x="252" y="138" text-anchor="middle" class="tx">창고 재고 대장</text>
+  <rect x="100" y="176" width="135" height="46" rx="9" class="p1s"/><text x="167" y="204" text-anchor="middle" class="tx">회계 장부</text>
+  <text x="170" y="250" text-anchor="middle" class="tx-m">같은 주문을 여러 번 입력 · 숫자가 서로 다름 · 집계에 며칠</text>
+  <line x1="355" y1="20" x2="355" y2="262" class="ln" stroke-dasharray="5 5"/>
+  <text x="540" y="26" text-anchor="middle" class="tx-b">ERP — 하나의 데이터로</text>
+  <circle cx="540" cy="146" r="56" class="p1"/><text x="540" y="140" text-anchor="middle" class="tx-w">통합</text><text x="540" y="160" text-anchor="middle" class="tx-w">데이터베이스</text>
+  <rect x="380" y="52" width="100" height="36" rx="9" class="p2s"/><text x="430" y="75" text-anchor="middle" class="tx">영업</text>
+  <rect x="600" y="52" width="100" height="36" rx="9" class="p3s"/><text x="650" y="75" text-anchor="middle" class="tx">생산계획</text>
+  <rect x="380" y="204" width="100" height="36" rx="9" class="p4s"/><text x="430" y="227" text-anchor="middle" class="tx">구매 · 자재</text>
+  <rect x="600" y="204" width="100" height="36" rx="9" class="p5s"/><text x="650" y="227" text-anchor="middle" class="tx">재고 · 출고</text>
+  <rect x="380" y="128" width="64" height="36" rx="9" class="card-bg"/><text x="412" y="151" text-anchor="middle" class="tx">회계</text>
+  <rect x="636" y="128" width="64" height="36" rx="9" class="card-bg"/><text x="668" y="151" text-anchor="middle" class="tx">인사</text>
+  <line x1="470" y1="88" x2="505" y2="108" class="ln" stroke-width="1.6"/><line x1="610" y1="88" x2="575" y2="108" class="ln" stroke-width="1.6"/>
+  <line x1="470" y1="204" x2="505" y2="184" class="ln" stroke-width="1.6"/><line x1="610" y1="204" x2="575" y2="184" class="ln" stroke-width="1.6"/>
+  <line x1="444" y1="146" x2="484" y2="146" class="ln" stroke-width="1.6"/><line x1="636" y1="146" x2="596" y2="146" class="ln" stroke-width="1.6"/>
+  <text x="540" y="262" text-anchor="middle" class="tx-m">한 번 입력하면 모든 부서가 같은 숫자를 실시간으로</text>
+</svg>`;
+  const ERPC_FIG_ISA = `<svg viewBox="0 0 720 300" role="img" aria-label="ISA-95 계층: 레벨 4 ERP, 레벨 3 MES, 레벨 2 감시 제어, 레벨 1 PLC, 레벨 0 센서와 구동기, 그리고 이 플랫폼의 해당 화면">
+  ${ERPC_ARR('c06x1')}
+  <polygon points="250,20 370,20 410,72 210,72" class="p2"/><text x="310" y="44" text-anchor="middle" class="tx-w">L4 ERP</text><text x="310" y="62" text-anchor="middle" class="tx-w">경영 · 계획</text>
+  <polygon points="210,76 410,76 450,128 170,128" class="p3"/><text x="310" y="100" text-anchor="middle" class="tx-w">L3 MES</text><text x="310" y="118" text-anchor="middle" class="tx-w">생산 실행 · 기록</text>
+  <polygon points="170,132 450,132 490,184 130,184" class="p4s"/><text x="310" y="162" text-anchor="middle" class="tx-b">L2 감시 · 제어(SCADA · HMI)</text>
+  <polygon points="130,188 490,188 530,240 90,240" class="p5s"/><text x="310" y="218" text-anchor="middle" class="tx-b">L1 PLC · 로봇 제어기</text>
+  <polygon points="90,244 530,244 570,292 50,292" class="p1s"/><text x="310" y="273" text-anchor="middle" class="tx-b">L0 센서 · 모터 · 실린더 · 카메라</text>
+  <text x="590" y="44" class="tx-m">일 · 주 · 월</text><text x="590" y="62" class="tx-m">ERP 화면</text>
+  <text x="590" y="100" class="tx-m">시간 · 분</text><text x="590" y="118" class="tx-m">MES 화면</text>
+  <text x="590" y="162" class="tx-m">초 · 대시보드 · 라인 화면</text>
+  <text x="590" y="218" class="tx-m">밀리초 · PLC 상태</text>
+  <text x="590" y="273" class="tx-m">3D 트윈의 장비들</text>
+  <line x1="40" y1="70" x2="40" y2="270" class="ln" stroke-width="2" marker-end="url(#c06x1)"/>
+  <text x="30" y="60" text-anchor="middle" class="tx-m">계획</text><text x="20" y="292" class="tx-m">실행</text>
+</svg>`;
+  const ERPC_CONTENT = [
+    { type: 'h', text: 'ERP 란 무엇인가 — 회사 전체를 하나의 데이터로' },
+    { type: 'p', html: '<b>ERP(Enterprise Resource Planning, 전사적 자원 관리)</b> 는 회사의 <b>사람 · 물건 · 돈 · 설비</b> 같은 자원을 하나의 시스템, 하나의 데이터베이스로 계획하고 관리하는 소프트웨어입니다. 영업 담당자가 주문을 입력하면 생산계획 담당자는 같은 숫자로 계획을 세우고, 구매 담당자는 부족한 자재를 보고, 창고는 출고를 준비하며, 회계는 매출과 재고 금액을 바로 압니다. <mark>한 번 입력한 데이터를 회사 전체가 함께 쓰는 것</mark> — 이것이 ERP 의 핵심입니다.' },
+    { type: 'figure', html: ERPC_FIG_SILO, caption: 'ERP 이전: 부서별 장부(중복 입력 · 숫자 불일치) → ERP: 통합 데이터베이스 하나' },
+    { type: 'table', head: ['ERP 가 없으면', 'ERP 가 있으면'], rows: [
+      ['같은 주문을 영업 · 생산 · 창고에서 각각 다시 입력', '수주 한 번 입력 → 계획 · 자재 · 출고가 같은 데이터를 사용'],
+      ['"재고가 몇 개야?" 를 창고에 전화로 물어봄', '재고 화면에서 실시간 확인(입고 · 출고마다 자동 반영)'],
+      ['자재가 떨어진 뒤에야 급하게 구매', 'MRP 가 부족분을 미리 계산해 발주를 제안'],
+      ['월말에 부서별 엑셀을 모아 며칠 걸려 집계', '실시간 집계 · 문서마다 누가 언제 무엇을 했는지 기록'],
+    ] },
+    { type: 'h', text: 'ERP 는 어떻게 발전해 왔나' },
+    { type: 'table', head: ['단계', '시기(대략)', '다루는 범위', '핵심 질문'], rows: [
+      ['MRP(자재 소요 계획)', '1960~70년대', '제품 구성(BOM) · 재고 → 자재 소요', '무엇을 · 얼마나 · 언제 사야 하나?'],
+      ['MRP II(제조 자원 계획)', '1980년대', 'MRP + 설비 능력 · 인력 · 원가', '그 계획을 만들 능력이 되나?'],
+      ['ERP(전사적 자원 관리)', '1990년대', '영업 · 구매 · 생산 · 재고 · 회계 · 인사를 하나로', '회사 전체가 한 데이터로 움직이나?'],
+      ['확장 · 클라우드 ERP', '2000년대 이후', '공급망 · 고객 · 협력사, 클라우드, 모바일, AI', '회사 밖까지 연결하고 더 빨리 판단하나?'],
+    ], caption: '이 강좌의 MRP(8차시) · 생산계획과 설비 능력(7차시)은 ERP 의 뿌리인 MRP · MRP II 를 그대로 체험하는 것입니다' },
+    { type: 'h', text: 'ERP 의 주요 모듈과 이 플랫폼의 메뉴' },
+    { type: 'table', head: ['모듈', '하는 일', '이 플랫폼 ERP 메뉴'], rows: [
+      ['영업 · 판매', '견적 · 수주 · 납기 관리 · 출하', '<span class="ui">₩ 영업 · 수주</span> · <span class="ui">⇪ 출고</span>'],
+      ['생산계획', '기준 생산계획(MPS) · 능력 계획 · 생산오더', '<span class="ui">▤ 생산계획 · 배정</span> · <span class="ui">⚑ 생산오더</span>'],
+      ['구매 · 자재', 'MRP · 구매 발주 · 입고', '<span class="ui">⛁ 자재(MRP) · 구매</span>'],
+      ['재고 · 창고', '현재고 · 입출고 이력 · 재고 조정 · 실사', '<span class="ui">▣ 재고</span>'],
+      ['기준정보', '품목 · BOM · 거래처 · 단가 · 리드타임', '<span class="ui">⚙ 기준정보</span> · <span class="ui">⇩ 데이터 가져오기</span>'],
+      ['품질', '검사 결과 · 불합격 처리', 'MES 의 검사 LOT 결과를 받아 입고 · 출고 여부에 반영'],
+      ['회계 · 원가', '매출 · 매입 · 재고 금액 · 원가 계산', '재고 금액(개요 화면)만 — 교육용 범위 밖'],
+      ['인사 · 급여', '인원 · 근태 · 급여', '없음 — 교육용 범위 밖'],
+    ], caption: '이 플랫폼은 생산과 직접 이어지는 모듈(영업 · 생산계획 · 자재 · 재고 · 출고 · 기준정보)을 중심으로 만들었습니다' },
+    { type: 'h', text: 'ERP 를 이해하는 다섯 가지 핵심 개념' },
+    { type: 'table', head: ['개념', '뜻', '이 플랫폼의 예'], rows: [
+      ['기준정보 vs 거래(트랜잭션)', '잘 바뀌지 않는 바탕 데이터 vs 매일 생기는 업무 기록', '품목 · BOM · 거래처 vs 수주 · 발주 · 입고 · 출고'],
+      ['문서 흐름', '업무가 문서(전표)로 이어지고 서로 연결됨', '수주 → 계획서 → 생산오더 → 실적 확인 → 출고 (<span class="ui">⇄ ERP↔MES 연동</span> 으로 추적)'],
+      ['통합 · 실시간', '한 거래가 관련 숫자를 모두 바꿈', '실적 확인 한 번 → 자재 출고(GI) · 완제품 입고(GR) · 재고 · 수주 잔량'],
+      ['계획과 실행의 분리', 'ERP 는 "무엇을 얼마나 언제까지", 현장 실행은 MES', 'ERP 생산오더 → MES 작업지시(9차시)'],
+      ['표준 프로세스 · 권한 · 기록', '정해진 순서와 승인, 누가 언제 했는지 남김', '검증 → 적용, 확정 → 생산 시작, 가져오기 이력 · 사용자 기록'],
+    ] },
+    { type: 'h', text: '공장 시스템 안에서 ERP 의 자리 — ISA-95 계층' },
+    { type: 'figure', html: ERPC_FIG_ISA, caption: '국제 표준 ISA-95(IEC 62264)의 계층 — 위로 갈수록 긴 시간 단위의 계획, 아래로 갈수록 빠른 실행' },
+    { type: 'p', html: 'ERP 는 맨 위 <b>레벨 4</b> 에서 일 · 주 · 월 단위로 계획합니다. 그 아래 <b>레벨 3 의 MES</b> 가 시간 · 분 단위로 현장을 실행하고 기록하며, 레벨 2~0 의 HMI · PLC · 센서 · 모터가 초 · 밀리초 단위로 설비를 움직입니다. 이 플랫폼은 다섯 계층을 모두 가지고 있어 <b>ERP 에서 내린 결정이 3D 공장의 장비까지 내려가고, 현장의 결과가 다시 ERP 까지 올라오는 것</b>을 한눈에 볼 수 있습니다.' },
+    { type: 'callout', kind: 'more', title: '실제 기업의 ERP', html: '<ul><li>많은 기업은 SAP · Oracle 같은 글로벌 ERP 패키지나 국내 중소기업용 ERP 를 씁니다. 이름은 달라도 영업 · 구매 · 생산 · 재고 · 회계 모듈과 기준정보 · 문서 흐름이라는 구조는 같습니다(예: SAP 의 SD 영업 · MM 자재 · PP 생산계획 · QM 품질 · FI/CO 회계 · 원가).</li><li>ERP 도입에서 가장 어려운 일은 프로그램 설치가 아니라 <b>기준정보 정리와 업무 방식(프로세스) 맞추기</b>입니다. 6-1 실습의 "데이터 가져오기(검증 → 적용)" 가 그 첫 단계를 체험하는 것입니다.</li><li>요즘 ERP 는 클라우드로 옮겨 가고, 수요 예측 · 이상 거래 탐지 · 대화형 조회 같은 AI 기능이 붙고 있습니다 — 이 플랫폼의 <span class="ui">✦ AI 도우미</span>(14차시)가 그 예입니다.</li></ul>' },
+    { type: 'callout', kind: 'info', title: '이 플랫폼 ERP 의 범위', html: '교육용이라 회계 · 원가 · 인사 모듈은 없습니다. 대신 실제 ERP 의 용어와 순서를 그대로 씁니다 — 기준정보 · 수주 · 생산계획 · 생산오더(PRO) · 자재 가용성(ATP) · 구매 발주(PO) · 입고 · 자재 출고(GI) · 완제품 입고(GR) · 기술적 완료(TECO) · 출고. 여기서 익힌 흐름은 실제 회사의 ERP 에서도 그대로 통합니다.' },
+  ];
+  const ERPC_SLIDES = [
+    { layout: 'diagram', title: 'ERP 란 — 회사 전체를 하나의 데이터로', html: ERPC_FIG_SILO, caption: '부서별 장부 → 통합 데이터베이스',
+      notes: '<p>💬 "편의점 본사와 가게들이 재고를 전화로 주고받는다면?" — 중복 입력 · 숫자 불일치 · 느린 집계를 끌어냅니다.</p><p>핵심 문장: <b>한 번 입력한 데이터를 회사 전체가 함께 쓴다.</b></p>' },
+    { layout: 'table', title: 'ERP 의 발전', head: ['단계', '핵심 질문'], rows: [
+      ['MRP', '무엇을 · 얼마나 · 언제 살까'], ['MRP II', '만들 능력(설비 · 인력 · 원가)이 되나'], ['ERP', '회사 전체가 한 데이터로'], ['확장 · 클라우드 ERP', '회사 밖까지 연결 · AI']],
+      notes: '<p>이 강좌의 8차시 MRP, 7차시 설비 배정(능력)이 ERP 의 뿌리를 그대로 체험하는 것임을 연결합니다. 연도는 외우지 않아도 됩니다.</p>' },
+    { layout: 'table', title: 'ERP 모듈 ↔ 이 플랫폼 메뉴', head: ['모듈', '메뉴'], rows: [
+      ['영업 · 판매', '영업 · 수주 · 출고'], ['생산계획', '생산계획 · 배정 · 생산오더'], ['구매 · 자재', '자재(MRP) · 구매'], ['재고', '재고'], ['기준정보', '기준정보 · 데이터 가져오기'], ['회계 · 인사', '없음(교육용 범위 밖)']],
+      notes: '<p>ERP 화면 왼쪽 메뉴를 띄워 놓고 한 줄씩 짚습니다. 💬 "품질 모듈은 어디 있을까?" → MES 의 검사 LOT 결과를 받아 씀(10차시).</p>' },
+    { layout: 'bullets', title: 'ERP 핵심 개념 다섯 가지', bullets: ['기준정보 vs 거래(트랜잭션)', '문서 흐름 — 수주 → 계획 → 생산오더 → 실적 → 출고', '통합 · 실시간 — 한 거래가 관련 숫자를 모두 바꿈', '계획(ERP)과 실행(MES)의 분리', '표준 프로세스 · 권한 · 기록'],
+      notes: '<p>오늘 실습은 첫 번째 개념(기준정보)을 직접 다룹니다. 나머지는 6~10차시에서 차례로 만납니다.</p>' },
+    { layout: 'diagram', title: 'ISA-95 — ERP 는 맨 위 레벨 4', html: ERPC_FIG_ISA,
+      notes: '<p>위로 갈수록 계획 · 긴 시간, 아래로 갈수록 실행 · 빠른 시간. 이 플랫폼은 L4 ERP 부터 L0 장비(3D 트윈)까지 모두 있어 결정이 내려가고 결과가 올라오는 것을 볼 수 있습니다.</p>' },
+  ];
+  const ERPC_QUIZ = [
+    { q: 'ERP 의 핵심 특징으로 가장 알맞은 것은?',
+      options: ['부서마다 따로 엑셀을 관리한다', '회사의 자원을 하나의 통합 데이터로 계획 · 관리한다', '설비를 밀리초 단위로 직접 제어한다', '센서 신호를 받아 모터를 돌린다'], answer: 1,
+      explain: 'ERP 는 영업 · 생산 · 구매 · 재고 · 회계 등을 하나의 데이터베이스로 통합합니다. 설비 제어는 PLC(L1), 현장 실행은 MES(L3)의 일입니다.' },
+    { q: 'ISA-95 계층에서 ERP 가 있는 레벨과 주로 다루는 시간 단위는?',
+      options: ['레벨 1 · 밀리초', '레벨 2 · 초', '레벨 3 · 분', '레벨 4 · 일 · 주 · 월'], answer: 3,
+      explain: 'ERP 는 레벨 4 에서 긴 시간 단위의 계획을, MES 는 레벨 3 에서 시간 · 분 단위의 실행을 맡습니다.' },
+  ];
   PY_COURSE.addChapter({
     id: 'ch06', no: '06', title: 'ERP ① 기준정보와 수주', subtitle: 'Master Data · Sales Orders',
     summary: '예시 파일로 품목 · BOM · 거래처 · 재고와 고객 수주를 불러오고, 기준정보와 수주를 직접 등록 · 조회합니다.',
@@ -186,10 +289,11 @@
       {
         id: 'ch06-1', title: '기준정보 가져오기와 조회', minutes: 50,
         goals: ['ERP 의 흐름과 기준정보의 역할을 말한다', '예시 기준정보를 검증 → 적용한다', 'BOM 으로 필요한 자재를 계산한다'],
-        flow: [['도입 — ERP 란', 7], ['개념 — 기준정보 · BOM', 10], ['실습 6-1 가져오기', 13], ['실습 6-2 품목 · BOM', 13], ['정리 · 퀴즈', 7]],
+        flow: [['도입 — ERP 란', 5], ['개념 — ERP 의 발전 · 모듈 · ISA-95', 12], ['개념 — 기준정보 · BOM', 6], ['실습 6-1 가져오기', 11], ['실습 6-2 품목 · BOM', 11], ['정리 · 퀴즈', 5]],
         content: [
           { type: 'figure', html: SHOT('erp_overview', 'ERP 개요 화면'), caption: 'ERP — 왼쪽 메뉴: 개요 · 영업 · 수주 · 생산계획 · 생산오더 · 자재 · 재고 · 출고 · 기준정보 · 데이터 가져오기 · 연동' },
           { type: 'p', html: '<mark>ERP(Enterprise Resource Planning)</mark> 는 회사의 영업 · 생산계획 · 자재 · 재고 · 출고를 하나의 데이터로 관리하는 시스템입니다. 공장 현장을 직접 움직이지는 않지만 "무엇을 · 얼마나 · 언제까지" 만들지 정해 <b>MES</b>(현장 실행, 9차시)에 내려보냅니다. 이 플랫폼의 ERP 는 실제 기업처럼 <b>기준정보 → 수주 → 생산계획 → 생산오더 → MES</b> 순서로 움직입니다.' },
+          ...ERPC_CONTENT,
           { type: 'figure', html: FIG_ERP, caption: 'ERP 의 흐름 — 이번 차시는 맨 왼쪽(기준정보 · 수주)' },
           { type: 'h', text: '기준정보(마스터 데이터)' },
           { type: 'table', head: ['기준정보', '내용', '이 플랫폼의 예'], rows: [
@@ -206,9 +310,10 @@
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 준비</b>: 처음 설치한 상태라면 기준정보가 시드(예시와 같은 값)로 들어 있어 검증 결과가 대부분 <b>동일</b>로 나옵니다. "신규" 가 보이게 하고 싶으면 새 데이터 폴더(data\\ 를 다른 이름으로 옮긴 뒤 실행)로 시작합니다.</li><li><b>공용 서버</b>: 적용은 여러 번 해도 중복이 생기지 않으므로 학생 모두 해도 안전합니다. 반면 품목 등록 · BOM 등록은 바로 저장되므로 이번 차시에서는 누르지 않게 합니다.</li><li><b>자주 막히는 곳</b>: 예시 버튼을 눌렀는데 "적용" 이 없음 → 검증 오류가 있는 경우(파일 형식) / 이력이 안 보임 → 화면을 아래로 스크롤.</li><li><b>확인 기준</b>: 6-1 건수 표, 6-2 레드 15박스 자재 계산(공작물 60 · 포장박스 15).</li><li><b>발문</b>: "BOM 이 틀려 있으면 어떤 일이 생길까?" → 자재가 모자라거나 남음, 원가 계산 오류.</li></ul>' },
         ],
         practice: [],
-        quiz: QUIZ1,
+        quiz: QUIZ1.concat(ERPC_QUIZ),
         slides: [
           { layout: 'title', title: '기준정보 가져오기와 조회', subtitle: 'ERP ① — 품목 · BOM · 거래처 · 재고', notes: '<p>3부 ERP · MES 의 시작. 오늘은 ERP 의 "기초 공사" 인 기준정보를 다룹니다.</p>' },
+          ...ERPC_SLIDES,
           { layout: 'diagram', title: 'ERP 의 흐름', html: FIG_ERP, notes: '<p>💬 "주문이 들어왔는데 BOM 이 없다면 무엇을 알 수 없을까?" → 필요한 자재 · 원가.</p>' },
           { layout: 'table', title: '기준정보 네 가지', head: ['기준정보', '예'], rows: [['품목', 'FG-BOX4-색 · WP-RECT-색 · PK-BOX'], ['BOM', '박스 = 공작물 4 + 포장박스 1'], ['거래처', '고객 4 · 공급사 2'], ['기초 재고', '실사 수량']],
             notes: '<p>품목 코드 규칙(FG = 완제품, WP = 공작물, PK = 포장재)을 짚습니다.</p>' },
@@ -240,7 +345,7 @@
           { type: 'figure', html: LAB_DEMAND },
           { type: 'figure', html: LAB_ORDER },
           { type: 'figure', html: LAB_OVERVIEW },
-          { type: 'callout', kind: 'more', title: '📘 더 알아보기 — 수주에서 출고까지', html: '이 플랫폼에서는 출고 단위가 <b>적재함(박스 5개)</b>입니다. 생산이 끝난 적재함이 출고될 때마다 MES 실적 → ERP 입고 · 출고 확정이 자동으로 일어나 수주의 출고 수량이 늘어납니다. 출고 화면(<span class="ui">⇪ 출고</span>)에서 직접 출고를 등록할 수도 있습니다(8차시).' },
+          { type: 'callout', kind: 'more', title: '수주에서 출고까지', html: '이 플랫폼에서는 출고 단위가 <b>적재함(박스 5개)</b>입니다. 생산이 끝난 적재함이 출고될 때마다 MES 실적 → ERP 입고 · 출고 확정이 자동으로 일어나 수주의 출고 수량이 늘어납니다. 출고 화면(<span class="ui">⇪ 출고</span>)에서 직접 출고를 등록할 수도 있습니다(8차시).' },
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 준비</b>: 6-4 의 고객 · 품목은 예시 기준정보에 있는 값입니다. 다른 고객 · 색으로 바꿔도 됩니다.</li><li><b>공용 서버 주의</b>: 6-4 는 누를 때마다 수주가 하나씩 생깁니다. 반 전체가 한 서버를 쓰면 수주가 30건 늘어나므로, 모둠당 1건만 등록하게 하거나 학생마다 수량을 다르게 해 자기 수주를 찾게 합니다. 지우는 기능은 없으므로 연습용 수주는 7차시 계획 · 생산에 그대로 활용합니다.</li><li><b>자주 막히는 곳</b>: 수주 등록이 안 됨 → 고객 · 품목을 고르지 않음(필수) / 납기를 비워도 등록됨(납기 없음 표시 "-").</li><li><b>AI 도우미</b>: 키가 없으면 규칙 기반 답(앞에 안내 문구). 숫자 비교 단계가 핵심이므로 어느 모드든 그대로 진행합니다.</li><li><b>확인 기준</b>: 자기 수주번호를 적어 냄, 개요 숫자와 AI 답 비교 결과(일치/불일치) 한 줄.</li></ul>' },
         ],
         practice: [],

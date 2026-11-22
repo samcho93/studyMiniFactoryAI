@@ -217,6 +217,57 @@
       explain: 'JSON 파일(minifactory.schedule.v1)로 저장해 파일 불러오기로 다시 만들 수 있습니다.' },
   ];
 
+  // ---------------------------------------------------------------- 생산계획 개념(계획의 층 · 생산 방식)
+  const PLANC_ARR = (id) => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fill-arrow"/></marker></defs>`;
+  const PLANC_FIG = `<svg viewBox="0 0 720 330" role="img" aria-label="생산계획의 층: 수요, 판매 운영 계획, 기준 생산계획, 자재 소요 계획과 능력 계획, 생산오더, 작업 일정과 디스패칭">
+  ${PLANC_ARR('c07x1')}
+  <rect x="20" y="14" width="300" height="40" rx="9" class="p1s"/><text x="170" y="39" text-anchor="middle" class="tx-b">수요 — 수주 · 수요 예측</text>
+  <rect x="20" y="72" width="300" height="40" rx="9" class="p2s"/><text x="170" y="97" text-anchor="middle" class="tx-b">판매 · 운영 계획(S&amp;OP) · 월</text>
+  <rect x="20" y="130" width="300" height="40" rx="9" class="p2"/><text x="170" y="155" text-anchor="middle" class="tx-w">기준 생산계획(MPS) · 주 · 일</text>
+  <rect x="20" y="188" width="140" height="40" rx="9" class="p3s"/><text x="90" y="213" text-anchor="middle" class="tx-b">MRP 자재</text>
+  <rect x="180" y="188" width="140" height="40" rx="9" class="p3s"/><text x="250" y="213" text-anchor="middle" class="tx-b">능력 계획 설비</text>
+  <rect x="20" y="246" width="300" height="40" rx="9" class="p4s"/><text x="170" y="271" text-anchor="middle" class="tx-b">생산오더 → (MES) 작업 일정 · 디스패칭</text>
+  <line x1="170" y1="54" x2="170" y2="68" class="ln" stroke-width="2" marker-end="url(#c07x1)"/>
+  <line x1="170" y1="112" x2="170" y2="126" class="ln" stroke-width="2" marker-end="url(#c07x1)"/>
+  <line x1="120" y1="170" x2="95" y2="184" class="ln" stroke-width="2" marker-end="url(#c07x1)"/>
+  <line x1="220" y1="170" x2="245" y2="184" class="ln" stroke-width="2" marker-end="url(#c07x1)"/>
+  <line x1="170" y1="228" x2="170" y2="242" class="ln" stroke-width="2" marker-end="url(#c07x1)"/>
+  <text x="350" y="39" class="tx-m">고객 주문 · 앞으로 팔릴 양</text>
+  <text x="350" y="97" class="tx-m">이번 달 대략 얼마나(제품군 단위)</text>
+  <text x="350" y="148" class="tx">무엇을 · 얼마나 · 언제 만들까(품목 단위)</text>
+  <text x="350" y="166" class="tx-m">이 플랫폼: <tspan class="tx-b">생산계획서</tspan></text>
+  <text x="350" y="206" class="tx-m">자재가 있나(8차시 MRP) · 설비가 감당하나</text>
+  <text x="350" y="224" class="tx-m">이 플랫폼: 자재 가용성(ATP) · <tspan class="tx-b">설비 배정</tspan></text>
+  <text x="350" y="264" class="tx-m">이 플랫폼: 생산오더(PRO) → MES 작업지시 ·</text>
+  <text x="350" y="282" class="tx-m">디스패치 보드(9차시)</text>
+  <text x="20" y="318" class="tx-m">위에서 아래로 갈수록 기간은 짧아지고 계획은 구체적이 됩니다.</text>
+</svg>`;
+  const PLANC_CONTENT = [
+    { type: 'h', text: '생산계획은 여러 층으로 세운다' },
+    { type: 'p', html: '공장의 계획은 한 번에 정해지지 않습니다. "이번 달에 대략 얼마나 팔릴까" 에서 시작해 "이번 주 · 오늘 어떤 품목을 몇 개" 로, 다시 "이 설비에서 몇 시부터 무엇을" 로 점점 구체적으로 내려옵니다. 위층 계획이 아래층 계획의 입력이 됩니다.' },
+    { type: 'figure', html: PLANC_FIG, caption: '생산계획의 층 — 이 플랫폼의 생산계획서는 기준 생산계획(MPS)에, 설비 배정은 능력 계획에 해당합니다' },
+    { type: 'table', head: ['계획', '기간 · 단위', '답하는 질문', '이 플랫폼'], rows: [
+      ['판매 · 운영 계획(S&amp;OP)', '월 · 제품군', '팔 양과 만들 수 있는 양을 맞추면?', '— (수주 잔량 · 개요 화면으로 감을 잡음)'],
+      ['기준 생산계획(MPS)', '주 · 일 · 품목', '무엇을 얼마나 언제 만들까?', '<span class="ui">▤ 생산계획 · 배정</span> 의 계획서(품목 · 수량 · 우선순위 · 납기)'],
+      ['자재 소요 계획(MRP)', '일 · 자재', '자재가 충분한가, 무엇을 살까?', '<span class="ui">⛁ 자재(MRP) · 구매</span>, 생산오더의 자재 가용성(ATP)'],
+      ['능력 계획', '시간 · 설비', '설비가 그 양을 시간 안에 만들 수 있나?', '설비 배정(필요 설비 수 · 설비별 부하 · 가용 시간 안 완료 여부)'],
+      ['생산오더 · 일정 계획', '분 · 설비', '어느 설비에서 어떤 순서로?', '<span class="ui">⚑ 생산오더</span> → MES 작업지시 · 디스패치 보드'],
+    ] },
+    { type: 'h', text: '주문을 받고 만들까, 미리 만들어 둘까 — 생산 방식' },
+    { type: 'table', head: ['방식', '뜻', '장점 · 단점', '예'], rows: [
+      ['재고 생산(MTS, Make to Stock)', '수요를 예측해 미리 만들어 창고에 둔다', '납품이 빠름 / 재고 비용 · 안 팔릴 위험', '생수 · 과자 같은 표준 제품'],
+      ['주문 생산(MTO, Make to Order)', '주문을 받은 뒤 만든다', '재고 부담 적음 / 납기가 길어짐', '맞춤 가구 · 특수 장비'],
+      ['주문 조립(ATO, Assemble to Order)', '부품은 미리, 조립은 주문 후', '둘의 절충', '옵션을 고르는 PC · 자동차'],
+    ], caption: '이 플랫폼은 고객 수주로 계획을 세우는 주문 생산(MTO) 흐름이 중심이며, 계획을 세울 때 완제품 재고를 보고 수량을 조정할 수 있습니다' },
+    { type: 'callout', kind: 'tip', title: '계획은 "능력" 을 넘으면 안 됩니다', html: '아무리 좋은 계획도 설비가 감당하지 못하면 납기를 놓칩니다. 그래서 ERP 는 계획(MPS)을 세운 뒤 반드시 <b>자재(MRP)</b> 와 <b>능력(설비 · 시간)</b> 을 확인합니다. 이 플랫폼에서 계획서를 만들면 바로 아래에 나오는 <b>설비 배정</b>(필요 설비 수 · 예상 소요 · 가용 시간 안 완료 여부 · 경고)이 그 능력 확인입니다.' },
+  ];
+  const PLANC_SLIDES = [
+    { layout: 'diagram', title: '생산계획의 층', html: PLANC_FIG,
+      notes: '<p>💬 "여행 계획도 달 → 주 → 하루 일정 순으로 세우죠?" 비유로 시작합니다.</p><p>이 플랫폼에서 학생이 다루는 곳: 생산계획서 = MPS, 설비 배정 = 능력 계획, 생산오더 = 실행 지시.</p>' },
+    { layout: 'table', title: '생산 방식 — MTS · MTO · ATO', head: ['방식', '핵심'], rows: [
+      ['재고 생산(MTS)', '예측해 미리 만든다'], ['주문 생산(MTO)', '주문 받고 만든다 — 이 플랫폼'], ['주문 조립(ATO)', '부품은 미리, 조립은 주문 후']],
+      notes: '<p>💬 "편의점 삼각김밥과 맞춤 양복은 어떤 방식일까?" 이 플랫폼은 수주에서 계획을 만드는 MTO 중심임을 확인합니다.</p>' },
+  ];
   PY_COURSE.addChapter({
     id: 'ch07', no: '07', title: 'ERP ② 생산계획과 생산오더', subtitle: 'Production Plan · Production Order',
     summary: '생산계획서를 만들고 설비를 배정해 확정 · 생산 시작하며, 생산오더와 자재 가용성을 확인합니다.',
@@ -227,10 +278,11 @@
       {
         id: 'ch07-1', title: '생산계획서와 설비 배정', minutes: 50,
         goals: ['계획서를 만들고 편집한다', '설비 배정 조건을 바꿔 비교한다', '확정 · 생산 시작 후 MES · 라인을 확인한다'],
-        flow: [['도입 — 계획이 없으면', 5], ['개념 — 계획서 · 배정', 7], ['실습 7-1 계획서', 10], ['실습 7-2 배정', 12], ['실습 7-3 생산 시작', 12], ['정리 · 퀴즈', 4]],
+        flow: [['도입 — 계획이 없으면', 4], ['개념 — 생산계획의 층 · 생산 방식', 8], ['개념 — 계획서 · 배정', 5], ['실습 7-1 계획서', 9], ['실습 7-2 배정', 11], ['실습 7-3 생산 시작', 10], ['정리 · 퀴즈', 3]],
         content: [
           { type: 'figure', html: SHOT('erp_plans', 'ERP 생산계획 · 배정 화면'), caption: '생산계획 · 배정 — 왼쪽 계획서 목록, 오른쪽 계획서 내용 · 설비 배정' },
           { type: 'p', html: '<mark>생산계획서</mark>는 "오늘 어떤 색을 몇 박스, 어떤 순서로 만들지" 를 적은 문서입니다. 이 플랫폼의 ERP 는 계획서를 받으면 <b>설비 몇 대로 · 설비마다 무엇을 · 어떤 순서로</b> 만들지 자동으로 배정하고, 사람이 검토 · 확정한 뒤 <b>생산 시작</b>을 누르면 생산오더와 MES 작업지시를 만듭니다.' },
+          ...PLANC_CONTENT,
           { type: 'figure', html: FIG_PLAN, caption: '계획서 상태 — 작성 → 확정 → 생산 지시됨 → 완료' },
           { type: 'h', text: '설비 배정은 어떻게 계산될까' },
           { type: 'table', head: ['규칙', '설명'], rows: [
@@ -251,6 +303,7 @@
         quiz: QUIZ1,
         slides: [
           { layout: 'title', title: '생산계획서와 설비 배정', subtitle: 'ERP ② — 계획 → 배정 → 확정 → 생산 시작', notes: '<p>지난 차시의 수주가 오늘 계획이 됩니다.</p>' },
+          ...PLANC_SLIDES,
           { layout: 'diagram', title: '계획서 상태', html: FIG_PLAN, notes: '<p>확정 ≠ 생산 시작. 확정 후 편집하면 다시 작성 중.</p>' },
           { layout: 'table', title: '설비 배정 규칙', head: ['규칙', '내용'], rows: [['한 설비 한 색', '색 바꾸면 전환 5분'], ['필요 설비 수', 'max(색 수, 소요 ÷ 가용)'], ['배정', '긴 작업 → 덜 바쁜 설비'], ['순서', '우선순위 → 납기 → 큰 작업']],
             notes: '<p>💬 "색이 3개인데 설비가 2대면?" → 한 설비는 색을 바꿔야 함(전환 시간).</p>' },
@@ -289,7 +342,7 @@
           { type: 'figure', html: LAB_PRO },
           { type: 'figure', html: LAB_SHORT },
           { type: 'figure', html: LAB_FILE },
-          { type: 'callout', kind: 'more', title: '📘 더 알아보기 — 왜 예약을 할까?', html: '두 생산오더가 같은 레드 공작물 40개를 동시에 쓰려고 하면, 둘 다 "충분하다" 고 판단했다가 생산 도중 한쪽이 멈출 수 있습니다. 그래서 먼저 릴리스된 오더가 자재를 <b>예약</b>하고, 다음 오더는 예약을 뺀 <b>가용</b>으로 판단합니다. 생산오더 화면 왼쪽 아래 <b>자재 예약</b> 카드가 그 현황입니다.' },
+          { type: 'callout', kind: 'more', title: '왜 예약을 할까?', html: '두 생산오더가 같은 레드 공작물 40개를 동시에 쓰려고 하면, 둘 다 "충분하다" 고 판단했다가 생산 도중 한쪽이 멈출 수 있습니다. 그래서 먼저 릴리스된 오더가 자재를 <b>예약</b>하고, 다음 오더는 예약을 뺀 <b>가용</b>으로 판단합니다. 생산오더 화면 왼쪽 아래 <b>자재 예약</b> 카드가 그 현황입니다.' },
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 준비</b>: 7-5 가 잘 되려면 그린 공작물 재고가 부족해야 합니다(예시 기준정보 기본값). 이전 수업에서 그린을 구매 · 입고했다면 수량을 크게(예: 40박스) 잡게 합니다.</li><li><b>다음 차시 연결</b>: 7-5 에서 만든 그린 계획서 · 생성 상태 생산오더는 <b>지우지 말고</b> 8차시(구매 → 입고 → 재릴리스)에서 이어서 씁니다. 7-6 에서는 복제본 하나만 삭제합니다.</li><li><b>자주 막히는 곳</b>: 실적 확인 표가 비어 있음 → 아직 적재함이 출고되지 않음(몇 분 기다림) / 부족 표가 안 나오고 생산이 시작됨 → 그린 재고가 충분한 상태(다른 팀이 입고함).</li><li><b>확인 기준</b>: 7-4 상태 5가지 설명, 7-5 ATP 표 숫자로 부족 계산, 부족해도 릴리스의 위험 한 줄.</li><li><b>발문</b>: "생산 도중에 자재가 떨어지면 어떤 손실이 생길까?" → 설비 정지 · 미완성 제품 · 납기 지연.</li></ul>' },
         ],
         practice: [],

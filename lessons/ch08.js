@@ -229,6 +229,59 @@
       explain: '마우스를 올리면 연결만 강조되고, 클릭하면 아래에 들어오는 · 나가는 데이터가 나옵니다.' },
   ];
 
+  // ---------------------------------------------------------------- 구매 · 재고 개념
+  const BUYC_ARR = (id) => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="fill-arrow"/></marker></defs>`;
+  const BUYC_FIG_P2P = `<svg viewBox="0 0 720 190" role="img" aria-label="구매 프로세스: 구매 요청, 구매 발주, 입고, 송장 검증, 대금 지급. 이 플랫폼은 발주 제안, 구매 발주, 입고까지 다룬다">
+  ${BUYC_ARR('c08x1')}
+  <rect x="10" y="40" width="120" height="56" rx="10" class="p2s"/><text x="70" y="64" text-anchor="middle" class="tx-b">구매 요청</text><text x="70" y="84" text-anchor="middle" class="tx-m">(PR · MRP 제안)</text>
+  <rect x="155" y="40" width="120" height="56" rx="10" class="p2"/><text x="215" y="64" text-anchor="middle" class="tx-w">구매 발주</text><text x="215" y="84" text-anchor="middle" class="tx-w">(PO)</text>
+  <rect x="300" y="40" width="120" height="56" rx="10" class="p2"/><text x="360" y="64" text-anchor="middle" class="tx-w">입고</text><text x="360" y="84" text-anchor="middle" class="tx-w">(검수 · 재고 +)</text>
+  <rect x="445" y="40" width="120" height="56" rx="10" class="card-bg"/><text x="505" y="64" text-anchor="middle" class="tx-b">송장 검증</text><text x="505" y="84" text-anchor="middle" class="tx-m">(발주 · 입고 · 송장)</text>
+  <rect x="590" y="40" width="120" height="56" rx="10" class="card-bg"/><text x="650" y="64" text-anchor="middle" class="tx-b">대금 지급</text><text x="650" y="84" text-anchor="middle" class="tx-m">(회계)</text>
+  <line x1="132" y1="68" x2="151" y2="68" class="ln" stroke-width="2" marker-end="url(#c08x1)"/>
+  <line x1="277" y1="68" x2="296" y2="68" class="ln" stroke-width="2" marker-end="url(#c08x1)"/>
+  <line x1="422" y1="68" x2="441" y2="68" class="ln" stroke-width="2" marker-end="url(#c08x1)"/>
+  <line x1="567" y1="68" x2="586" y2="68" class="ln" stroke-width="2" marker-end="url(#c08x1)"/>
+  <rect x="10" y="118" width="410" height="34" rx="8" class="p1s"/><text x="215" y="140" text-anchor="middle" class="tx">이 플랫폼: MRP 발주 제안 → 부족분 구매 발주 · 수동 발주 → 입고</text>
+  <rect x="445" y="118" width="265" height="34" rx="8" class="card-bg"/><text x="577" y="140" text-anchor="middle" class="tx-m">회계 단계 — 교육용 범위 밖</text>
+  <text x="360" y="180" text-anchor="middle" class="tx-m">"구매에서 지급까지(Procure to Pay)" — ERP 의 대표적인 문서 흐름</text>
+</svg>`;
+  const BUYC_CONTENT = [
+    { type: 'h', text: '구매는 어떤 순서로 이루어질까' },
+    { type: 'figure', html: BUYC_FIG_P2P, caption: '구매 요청 → 구매 발주 → 입고 → 송장 검증 → 대금 지급' },
+    { type: 'p', html: '실제 회사에서는 필요한 부서가 <b>구매 요청</b>을 올리고, 구매 담당자가 공급사를 정해 <b>구매 발주(PO)</b> 를 냅니다. 물건이 도착하면 수량 · 품질을 확인해 <b>입고</b>하고(이때 재고가 늘어남), 공급사의 송장(청구서)을 발주 · 입고와 맞춰 본 뒤 <b>대금</b>을 지급합니다. 이 플랫폼에서는 MRP 의 발주 제안이 구매 요청 역할을 하고, 발주와 입고까지를 직접 해 봅니다.' },
+    { type: 'h', text: '재고 관리의 기본 용어' },
+    { type: 'table', head: ['용어', '뜻', '이 플랫폼에서'], rows: [
+      ['리드타임', '발주해서 입고될 때까지 걸리는 시간', '품목마다 기준정보에(예: 공작물 3일 · 포장박스 2일)'],
+      ['안전재고', '수요 변동 · 입고 지연에 대비해 늘 남겨 두는 양', '품목마다 기준정보에(예: 공작물 80) — MRP 가 부족 계산에 더함'],
+      ['발주잔', '발주했지만 아직 들어오지 않은 양', 'MRP 표의 발주잔 열'],
+      ['로트 크기(발주 단위)', '한 번에 주문하는 묶음 단위', 'MRP 발주 제안은 100개 단위로 올림'],
+      ['재주문점', '재고가 이 수준 아래로 내려가면 주문하는 기준(리드타임 동안 쓸 양 + 안전재고)', '이 플랫폼은 재주문점 대신 MRP(계획 기반)로 계산'],
+    ] },
+    { type: 'callout', kind: 'info', title: '재주문점 방식과 MRP 방식', html: '<b>재주문점 방식</b>은 "재고가 줄면 채운다" 처럼 과거 사용량을 보고 주문합니다. <b>MRP 방식</b>은 "앞으로 만들 계획에 무엇이 얼마나 필요한가" 를 계산해 주문합니다. 제품 구성(BOM)이 분명하고 계획이 있는 제조업에서는 MRP 가 기본이고, 나사 · 소모품처럼 값싸고 자주 쓰는 품목은 재주문점으로 관리하기도 합니다.' },
+  ];
+  const BUYC_SLIDES = [
+    { layout: 'diagram', title: '구매에서 지급까지(Procure to Pay)', html: BUYC_FIG_P2P,
+      notes: '<p>💬 "온라인 쇼핑으로 비유하면?" 장바구니(요청) → 결제 · 주문(발주) → 택배 수령 · 확인(입고) → 카드 명세서 확인(송장 검증) → 결제 대금 출금(지급).</p><p>오늘 실습 범위는 발주 제안 → 발주 → 입고.</p>' },
+    { layout: 'table', title: '재고 관리 기본 용어', head: ['용어', '한 줄 뜻'], rows: [
+      ['리드타임', '발주 → 입고까지 걸리는 시간'], ['안전재고', '늘 남겨 두는 여유분'], ['발주잔', '주문했지만 아직 안 온 양'], ['로트 크기', '한 번에 주문하는 단위(100개)'], ['재주문점', '이 아래로 줄면 주문']],
+      notes: '<p>기준정보(6차시)에서 본 안전재고 · 리드타임이 MRP 에서 어떻게 쓰이는지 연결합니다.</p>' },
+  ];
+  const STOCKC_CONTENT = [
+    { type: 'h', text: '공장의 재고는 네 가지' },
+    { type: 'table', head: ['종류', '뜻', '이 플랫폼의 품목'], rows: [
+      ['원자재', '생산에 들어가는 재료 · 부품', '공작물 WP-RECT-색 5종'],
+      ['포장재', '포장에 쓰는 자재', '포장박스 PK-BOX'],
+      ['재공품(WIP)', '만드는 중인 물건', '컨베이어 위 공작물 · 채우는 중인 박스 · 쌓는 중인 적재함(재고 화면에는 나오지 않음)'],
+      ['완제품', '다 만들어 팔 수 있는 물건', '박스 완제품 FG-BOX4-색 5종'],
+    ], caption: 'ERP 개요의 "재고 금액" = 품목별 수량 × 단가의 합 — 재고는 회사의 돈이 물건으로 묶여 있는 것입니다' },
+    { type: 'p', html: '재고는 너무 적으면 생산이 멈추고(자재 부족) 납기를 놓치며, 너무 많으면 돈이 묶이고 보관 비용 · 품질 저하 위험이 생깁니다. ERP 는 <b>재고를 정확한 숫자로 보여 주고, 모든 증감을 거래 기록으로 남겨</b> 이 균형을 잡도록 돕습니다.' },
+  ];
+  const STOCKC_SLIDES = [
+    { layout: 'table', title: '재고의 네 가지 종류', head: ['종류', '이 플랫폼'], rows: [
+      ['원자재', '공작물 5색'], ['포장재', '포장박스'], ['재공품(WIP)', '라인 위의 공작물 · 박스'], ['완제품', '박스 완제품 5색']],
+      notes: '<p>💬 "재고가 많으면 좋은 걸까?" — 돈이 묶이고 보관 · 품질 위험. 적으면 생산이 멈춤. ERP 는 정확한 숫자와 거래 기록으로 균형을 잡게 해 줍니다.</p>' },
+  ];
   PY_COURSE.addChapter({
     id: 'ch08', no: '08', title: 'ERP ③ 자재 · 구매 · 재고 · 출고', subtitle: 'MRP · Purchasing · Inventory · Shipping',
     summary: 'MRP 로 부족 자재를 찾아 구매 발주 · 입고하고, 재고 이력 · 재고 조정 · 출고와 ERP↔MES 연동 그래프를 직접 다룹니다.',
@@ -240,9 +293,10 @@
       {
         id: 'ch08-1', title: 'MRP 와 구매', minutes: 50,
         goals: ['MRP 계산식과 표의 각 열을 설명한다', '부족분 구매 발주 → 입고를 수행한다', '수동 발주 · 취소를 수행한다'],
-        flow: [['도입 — 공작물이 모자라면?', 5], ['MRP 개념', 8], ['실습 8-1 MRP 읽기', 12], ['실습 8-2 발주 · 입고', 10], ['실습 8-3 수동 발주', 6], ['정리 · 퀴즈', 9]],
+        flow: [['도입 — 공작물이 모자라면?', 4], ['개념 — 구매 프로세스 · 재고 용어', 7], ['MRP 개념', 6], ['실습 8-1 MRP 읽기', 11], ['실습 8-2 발주 · 입고', 9], ['실습 8-3 수동 발주', 6], ['정리 · 퀴즈', 7]],
         content: [
           { type: 'p', html: '7차시에서 생산을 시작하려는데 "자재 가용성 부족 — 릴리스 보류" 가 뜬 적이 있나요? 공장은 자재가 없으면 아무것도 만들 수 없습니다. 그래서 ERP 에는 <mark>MRP(Material Requirements Planning, 자재 소요 계획)</mark> 가 있습니다. MRP 는 <b>생산계획을 보고 필요한 자재를 계산</b>하고, 모자라면 무엇을 얼마나 사야 하는지 알려 줍니다.' },
+          ...BUYC_CONTENT,
           { type: 'h', text: 'MRP 는 이렇게 계산합니다' },
           { type: 'figure', html: FIG_MRP, caption: '생산계획 → BOM 전개 → 총소요 → 부족분 → 발주 제안(100개 단위)' },
           { type: 'table', head: ['열', '뜻', '읽는 법'], rows: [
@@ -259,13 +313,14 @@
           { type: 'figure', html: LAB_MRP },
           { type: 'figure', html: LAB_PO },
           { type: 'figure', html: LAB_MANUAL },
-          { type: 'callout', kind: 'more', title: '📘 더 알아보기 — 실제 기업의 MRP', html: '실제 ERP 는 MRP 를 밤마다 돌려 <b>구매 요청</b>을 만들고, 구매 담당자가 검토해 <b>구매 발주</b>로 바꾸며, 공급사가 납품하면 <b>입고 검사</b>를 거쳐 재고로 넣습니다. 이 플랫폼은 그 흐름을 "부족분 구매 발주 → 입고" 두 번의 클릭으로 줄여 보여 줍니다.' },
+          { type: 'callout', kind: 'more', title: '실제 기업의 MRP', html: '실제 ERP 는 MRP 를 밤마다 돌려 <b>구매 요청</b>을 만들고, 구매 담당자가 검토해 <b>구매 발주</b>로 바꾸며, 공급사가 납품하면 <b>입고 검사</b>를 거쳐 재고로 넣습니다. 이 플랫폼은 그 흐름을 "부족분 구매 발주 → 입고" 두 번의 클릭으로 줄여 보여 줍니다.' },
           { type: 'callout', kind: 'tip', teacher: true, title: '🧑‍🏫 지도 포인트', html: '<ul><li><b>수업 준비</b>: 예시 기준정보 · 수주를 가져오고(6차시), 그린이 포함된 계획서를 만들어 두면(7차시) MRP 에 부족이 나타납니다. 부족이 하나도 없으면 <span class="ui">부족분 구매 발주</span> 가 꺼져 있으니, 수주를 하나 더 넣어 부족을 만듭니다.</li><li><b>자주 막히는 곳</b>: 발주 직후 "현재고가 안 늘었다" — 입고 전이라 발주잔만 늘었다는 것을 표의 두 열로 비교해 보여 줍니다.</li><li><b>여러 학생이 같은 서버</b>를 쓰면 한 학생의 발주가 모두의 MRP 를 바꿉니다. 모둠별로 한 명만 버튼을 누르게 하거나, 교사 시연 후 관찰만 하게 합니다.</li><li><b>확인 기준</b>: 실습 8-1 에서 부족 줄 하나를 계산식으로 설명, 실습 8-2 에서 상태가 접수 → 입고 완료로 바뀐 것을 캡처 제출.</li></ul>' },
         ],
         practice: [],
         quiz: QUIZ1,
         slides: [
           { layout: 'title', title: 'MRP 와 구매', subtitle: '무엇을, 얼마나, 언제 살까', notes: '<p>💬 도입: "레드 박스 20개를 만들려면 공작물이 몇 개 필요할까요?" → 80. 이 계산을 모든 자재에 대해 자동으로 하는 것이 MRP 라고 연결합니다.</p>' },
+          ...BUYC_SLIDES,
           { layout: 'diagram', title: 'MRP 계산 흐름', html: FIG_MRP, notes: '<p>그림의 예(레드 20박스 → 공작물 80 · 박스 20)를 판서합니다. 안전재고를 왜 더하는지 질문합니다.</p>' },
           { layout: 'table', title: 'MRP 표의 열', head: ['열', '뜻'], rows: [['총소요', '계획 × BOM'], ['현재고 · 발주잔', '있는 것 · 오는 중'], ['안전재고', '남겨 둘 최소량'], ['부족 · 발주 제안', '사야 할 양(100 단위)'], ['리드타임', '입고까지 일수']],
             notes: '<p>실습 8-1 의 3단계를 화면으로 함께 짚습니다.</p>' },
@@ -285,9 +340,10 @@
       {
         id: 'ch08-2', title: '재고 · 출고 · 연동 그래프', minutes: 50,
         goals: ['재고 이력에서 적재함 하나의 흔적을 찾는다', '재고 조정을 사유와 함께 수행한다', '출고 등록 · 확정과 자동 출고 조건을 설명한다', '연동 그래프로 문서 사슬을 따라간다'],
-        flow: [['도입 — 재고는 언제 움직이나', 5], ['실습 8-4 재고 이력', 10], ['실습 8-5 재고 조정', 6], ['실습 8-6 출고', 10], ['실습 8-7 연동 그래프', 10], ['정리 · 퀴즈', 9]],
+        flow: [['도입 — 재고는 언제 움직이나', 5], ['개념 — 재고의 종류 · 금액', 4], ['실습 8-4 재고 이력', 10], ['실습 8-5 재고 조정', 6], ['실습 8-6 출고', 10], ['실습 8-7 연동 그래프', 10], ['정리 · 퀴즈', 5]],
         content: [
           { type: 'p', html: '재고 숫자는 저절로 바뀌지 않습니다. 반드시 <b>어떤 거래</b>가 있어야 바뀌고, 그 거래는 이력에 남습니다. 이 교시에서는 재고가 움직이는 네 가지 경우를 직접 확인하고, 마지막으로 ERP 와 MES 의 문서가 어떻게 이어져 있는지 그래프로 봅니다.' },
+          ...STOCKC_CONTENT,
           { type: 'figure', html: FIG_STOCK, caption: '재고는 입고(+) · 자재 출고(−) · 고객 출고(−) · 재고 조정(±) 으로만 움직입니다' },
           { type: 'h', text: '적재함 하나가 남기는 기록' },
           { type: 'table', head: ['거래', '품목', '수량', '언제'], rows: [
@@ -310,6 +366,7 @@
         quiz: QUIZ2,
         slides: [
           { layout: 'title', title: '재고 · 출고 · 연동 그래프', subtitle: '재고는 거래로만 움직인다', notes: '<p>💬 "창고 재고 숫자가 틀렸다면 무엇부터 볼까요?" → 이력. 오늘의 핵심 질문입니다.</p>' },
+          ...STOCKC_SLIDES,
           { layout: 'diagram', title: '재고가 움직이는 네 가지', html: FIG_STOCK, notes: '<p>각 화살표가 실제 화면의 어느 버튼 · 어느 자동 처리에서 생기는지 연결합니다.</p>' },
           { layout: 'table', title: '적재함 하나의 흔적', head: ['거래', '수량'], rows: [['공작물 자재 출고', '−20'], ['박스 자재 출고', '−5'], ['완제품 입고', '+5'], ['고객 출고', '−5']],
             notes: '<p>BOM(박스 1 = 공작물 4 + 박스 1)과 적재함 5박스로 숫자를 유도하게 합니다.</p>' },
