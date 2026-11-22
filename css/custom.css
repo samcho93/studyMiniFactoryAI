@@ -1,0 +1,87 @@
+/* 강좌별 추가 스타일 — lectureBuilder 가 엔진을 갱신해도 이 파일은 덮어쓰지 않습니다. */
+
+/* 화면 캡처(문서 · 슬라이드 공통): <img class="shot" src="assets/shots/….jpg" alt="…"> */
+img.shot { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px;
+  background: #fff; cursor: zoom-in; box-shadow: 0 2px 10px rgba(0, 0, 0, .06); }
+.figure img.shot + img.shot, .figure .shot-pair { margin-top: 10px; }
+.shot-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.shot-pair img.shot + img.shot { margin-top: 0; }
+@media (max-width: 760px) { .shot-pair { grid-template-columns: 1fr; } }
+/* 일부만 보여 주는 캡처: <div class="shot-crop" style="--h:320px;--y:0%"><img class="shot" …></div> */
+.shot-crop { height: var(--h, 340px); overflow: hidden; border-radius: 8px; border: 1px solid var(--line); }
+.shot-crop img.shot { border: 0; border-radius: 0; object-fit: cover; object-position: 50% var(--y, 0%); height: 100%; }
+
+/* 슬라이드 안 캡처 */
+.s-diagram .d-host img.shot { width: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+
+/* 따라하기 단계 상자 */
+.steps { counter-reset: st; list-style: none; padding: 0; margin: 10px 0; }
+.steps > li { counter-increment: st; position: relative; padding: 10px 12px 10px 48px; margin: 8px 0;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.steps > li::before { content: counter(st); position: absolute; left: 12px; top: 10px; width: 26px; height: 26px;
+  border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; display: flex; align-items: center;
+  justify-content: center; font-size: 14px; }
+.ui { display: inline-block; padding: 0 7px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px;
+  background: var(--card); font-size: .92em; white-space: nowrap; }
+.prompt { display: block; margin: 6px 0; padding: 8px 12px; border-left: 4px solid var(--accent2); border-radius: 6px;
+  background: var(--accent2-soft, rgba(180, 83, 9, .08)); font-weight: 600; }
+.prompt::before { content: '💬 '; }
+
+/* ---------------------------------------------------------------- 코드 실행 없는 강좌 */
+html.no-code .layout { grid-template-columns: var(--nav-w) 5px minmax(360px, 1fr) 0 0; }
+html.no-code .layout.nav-collapsed { grid-template-columns: 0 0 minmax(360px, 1fr) 0 0; }
+html.no-code #output, html.no-code .gutter[data-resize="out"], html.no-code #editorPane,
+html.no-code #editorPane + .hgutter, html.no-code .hgutter[data-resize="editor"], html.no-code #serverBtn,
+html.no-code #fsConsoleSlot { display: none !important; }
+html.no-code #docView .doc { max-width: 1080px; }
+@media (max-width: 900px) { html.no-code .layout { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------------- 단계별 실습 블록
+ * <div class="lab" data-lab="ch06-1-a">
+ *   <div class="lab-head"><span class="lab-badge">실습 6-1</span><b>제목</b><span class="lab-meta">⏱ 10분 · 화면: ERP</span></div>
+ *   <p class="lab-goal">목표 …</p>
+ *   <ol class="lab-steps"><li class="lab-step"><div class="lab-do">할 일</div> (캡처) <div class="lab-check">확인 …</div></li> …</ol>
+ *   <div class="lab-result">결과 / 정리</div>
+ * </div>  (figure 블록의 html 에 넣습니다) */
+.figure:has(> .lab) { padding: 0; border: 0; background: none; box-shadow: none; overflow: visible; }
+.lab { border: 2px solid var(--accent); border-radius: 14px; background: var(--card); margin: 4px 0; overflow: hidden; }
+.lab-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 12px 16px;
+  background: var(--accent-soft, rgba(15, 118, 110, .1)); border-bottom: 1px solid var(--line); }
+.lab-head b { font-size: 1.08em; }
+.lab-badge { background: var(--accent); color: #fff; border-radius: 999px; padding: 2px 10px; font-size: .85em; font-weight: 700; }
+.lab-meta { margin-left: auto; color: var(--muted); font-size: .88em; }
+.lab-goal, .lab-pre { margin: 10px 16px 0; }
+.lab-goal::before { content: '🎯 '; }
+.lab-pre { color: var(--muted); font-size: .92em; }
+.lab-pre::before { content: '🧰 준비: '; font-weight: 700; color: var(--fg); }
+.lab-prog { display: flex; align-items: center; gap: 10px; padding: 8px 16px; font-size: .9em; color: var(--muted); }
+.lab-prog-bar { flex: 1; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.lab-prog-bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+.lab-reset { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 8px; padding: 2px 8px; cursor: pointer; font: inherit; }
+.lab-done .lab-prog-text { color: var(--accent); font-weight: 700; }
+.lab-steps { counter-reset: ls; list-style: none; margin: 6px 0 0; padding: 0 16px 6px; }
+.lab-step { counter-increment: ls; position: relative; padding: 12px 12px 12px 54px; margin: 10px 0; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--pane, transparent); transition: opacity .2s, background .2s; }
+.lab-step::before { content: counter(ls); position: absolute; left: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.lab-step.checked { background: var(--accent-soft, rgba(15, 118, 110, .08)); }
+.lab-step.checked::before { content: '✓'; }
+.lab-step.checked .lab-do, .lab-step.checked .lab-check, .lab-step.checked img.shot { opacity: .72; }
+.lab-tick { float: right; margin: -2px 0 6px 10px; display: inline-flex; align-items: center; gap: 4px; font-size: .85em;
+  color: var(--muted); cursor: pointer; user-select: none; }
+.lab-tick input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+.lab-do { line-height: 1.7; }
+.lab-step img.shot, .lab-step .shot-crop, .lab-step .shot-pair { margin-top: 10px; }
+.lab-check { margin-top: 8px; padding: 6px 10px; border-radius: 8px; background: rgba(21, 128, 61, .08); font-size: .93em; }
+.lab-check::before { content: '✔ 확인: '; font-weight: 700; color: var(--ok, #15803d); }
+.lab-tip { margin-top: 8px; padding: 6px 10px; border-radius: 8px; background: rgba(180, 83, 9, .08); font-size: .93em; }
+.lab-tip::before { content: '💡 '; }
+.lab-result { margin: 4px 16px 14px; padding: 10px 12px; border-left: 4px solid var(--accent); border-radius: 6px; background: var(--accent-soft, rgba(15, 118, 110, .08)); }
+.lab-result::before { content: '📌 정리 '; font-weight: 800; }
+.lab-q { margin: 0 16px 14px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 8px; }
+.lab-q::before { content: '📝 생각해 보기 '; font-weight: 800; }
+
+/* 확대 보기 */
+.shot-zoom { position: fixed; inset: 0; z-index: 99999; background: rgba(10, 14, 20, .88); display: flex;
+  align-items: center; justify-content: center; padding: 2vh 2vw; cursor: zoom-out; }
+.shot-zoom img { max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: 0 10px 40px rgba(0, 0, 0, .5); }

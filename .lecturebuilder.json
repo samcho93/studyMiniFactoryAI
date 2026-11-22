@@ -1,0 +1,80 @@
+{
+  "id": "studyMiniFactoryAI",
+  "title": "스마트 미니팩토리로 배우는 제조 AI · 피지컬 AI",
+  "subtitle": "ERP · MES · 3D 디지털트윈 · AI 예지보전 · AI 생산계획 따라하기",
+  "icon": "🏭",
+  "repoName": "studyMiniFactoryAI",
+  "language": "python",
+  "languageOther": "",
+  "kind": "course",
+  "design": {
+    "template": "classic",
+    "preset": "teal",
+    "accent": "#0f766e",
+    "accent2": "#b45309",
+    "theme": "light",
+    "brand": "SamStudy",
+    "importedFrom": ""
+  },
+  "roles": {
+    "student": true,
+    "teacher": true,
+    "teacherPass": "samcho93",
+    "showSolutionToStudent": true
+  },
+  "practice": {
+    "enabled": true,
+    "runtime": "auto"
+  },
+  "engine": {
+    "mode": "profile",
+    "profile": "python-lab",
+    "cloneFrom": ""
+  },
+  "content": {
+    "audience": "스마트팩토리 · 자동화 · 산업 AI 를 배우는 대학생 · 특성화고 · 직업훈련 · 재직자",
+    "level": "입문~중급",
+    "chapters": 14,
+    "sectionMinutes": 50,
+    "sectionsPerChapter": 2,
+    "description": "스마트 미니팩토리 통합 플랫폼(miniPythicalAI)으로 제조 AI · 피지컬 AI 를 배우는 실습 강좌",
+    "outline": "",
+    "references": "",
+    "tone": "존댓말, 초보자도 이해할 수 있게 화면 캡처 · 그림 · 따라하기 중심",
+    "certName": "",
+    "toolName": ""
+  },
+  "problems": {
+    "quiz": true,
+    "practice": true,
+    "chapterTest": false,
+    "mockExam": false,
+    "perSection": 3,
+    "mockCount": 20,
+    "mockSets": 1,
+    "types": [
+      "choice"
+    ]
+  },
+  "repo": {
+    "parentDir": "D:\\Work\\Web",
+    "owner": "samcho93",
+    "visibility": "public",
+    "createGithub": true
+  },
+  "deploy": {
+    "cloudflare": false,
+    "project": "studyminifactoryai",
+    "branch": "main",
+    "ciWorkflow": false
+  },
+  "claude": {
+    "model": "",
+    "permissionMode": "acceptEdits",
+    "maxBudgetUsd": "",
+    "extraInstructions": ""
+  },
+  "createdAt": "2026-11-22T15:36:41.634Z",
+  "updatedAt": "2026-11-22T15:48:19.813Z",
+  "shortTitle": "제조 AI · 피지컬 AI 실습"
+}
